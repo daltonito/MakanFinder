@@ -35,7 +35,8 @@ jobs:
             --name MyApp \
             --input target/ \
             --main-jar MakanFinder-1.0-SNAPSHOT.jar \
-            --type dmg
+            --type dmg \
+           --icon installer/icon.icns
 
       # Windows installer
       - name: Create EXE installer
@@ -46,7 +47,7 @@ jobs:
             --input target\ `
             --main-jar MakanFinder-1.0-SNAPSHOT.jar `
             --type exe `
-            --icon src\main\resources\icon.ico
+            --icon installer\icon.ico
         shell: pwsh
 
       - name: Upload artifact
