@@ -29,7 +29,13 @@ jobs:
 
       - name: Create installer
         run: |
-          if [[ "${{ runner.os }}" == "Windows" ]]; then
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            jpackage \
+              --name MCL \
+              --input target/ \
+              --main-jar MakanFinder-1.0-SNAPSHOT.jar \
+              --type dmg \
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
             jpackage \
               --name MCL \
               --input target/ \
