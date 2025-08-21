@@ -43,17 +43,20 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           jpackage `
-            --name MyApp `
+            --name MCL `
             --input target\ `
             --main-jar MakanFinder-1.0-SNAPSHOT.jar `
+            --main-class sample.Starter `
             --type exe `
-            --icon installer\icon.ico
+            --icon installer\icon.ico `
+            --module-path $env:JAVA_HOME\jmods `
+            --add-modules javafx.controls,javafx.fxml
         shell: pwsh
 
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MyApp-${{ runner.os }}
+          name: MCL-${{ runner.os }}
           path: |
             *.dmg
             *.exe
