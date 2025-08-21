@@ -1,0 +1,4 @@
+--patch-module
+MakanFinder=_
+--add-reads
+MakanFinder=ALL-UNNAMED
