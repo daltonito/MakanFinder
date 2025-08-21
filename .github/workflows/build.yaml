@@ -34,7 +34,7 @@ jobs:
           jpackage \
             --name MyApp \
             --input target/ \
-            --main-jar myapp.jar \
+            --main-jar MakanFinder-1.0-SNAPSHOT.jar \
             --type dmg
 
       # Windows installer
@@ -44,7 +44,7 @@ jobs:
           jpackage `
             --name MyApp `
             --input target\ `
-            --main-jar myapp.jar `
+            --main-jar MakanFinder-1.0-SNAPSHOT.jar `
             --type exe `
             --icon src\main\resources\icon.ico
         shell: pwsh
