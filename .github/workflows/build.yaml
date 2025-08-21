@@ -46,9 +46,9 @@ jobs:
           fi
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ runner.os }}-installer
+          name: MyJavaFXApp
           path: |
             *.dmg
             *.exe
