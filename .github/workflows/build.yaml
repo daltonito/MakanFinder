@@ -1,9 +1,11 @@
-name: Build Portable App
+name: Build JavaFX App
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+  release:
+    types: [created]
 
 jobs:
   build-windows:
@@ -40,7 +42,6 @@ jobs:
             --main-jar MCL-5.0.jar `
             --main-class sample.Starter `
             --type app-image `
-            --icon installer\icon.ico `
             --runtime-image runtime
 
       - name: Zip app-image
