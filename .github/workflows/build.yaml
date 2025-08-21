@@ -1,69 +1,53 @@
-name: Build JavaFX App
+name: Build Portable App
 
 on:
   push:
-    branches:
-      - main
-  release:
-    types: [created]
+    tags:
+      - "v*"
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest]
+  build-windows:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: 17
 
-      # <-- Add JavaFX SDK download here -->
-      - name: Download JavaFX SDK
-        if: runner.os == 'Windows'
+      - name: Build fat JAR with Maven
+        run: mvn -B clean package shade:shade
+
+      - name: Create runtime image (Java + JavaFX)
         run: |
-          curl -L -o javafx-sdk.zip https://download2.gluonhq.com/openjfx/21.0.1/openjfx-21.0.1_windows-x64_bin-sdk.zip
-          unzip javafx-sdk.zip -d javafx-sdk
+          curl -L https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_windows-x64_bin-sdk.zip -o javafx.zip
+          tar -xf javafx.zip
+          $env:PATH="$env:JAVA_HOME/bin;$env:PATH"
+          jlink --module-path "$env:JAVA_HOME/jmods;javafx-sdk-21.0.2/lib" `
+                --add-modules javafx.controls,javafx.fxml `
+                --strip-debug --compress 2 --no-header-files --no-man-pages `
+                --output runtime
 
-      - name: Build JAR
-        run: mvn clean package
-
-      # macOS installer
-      - name: Create DMG installer
-        if: runner.os == 'macOS'
-        run: |
-          jpackage \
-            --name MyApp \
-            --input target/ \
-            --main-jar MakanFinder-1.0-SNAPSHOT.jar \
-            --type dmg \
-           --icon installer/icon.icns
-
-      # Windows installer
-      - name: Create EXE installer
-        if: runner.os == 'Windows'
+      - name: Package portable app-image
         run: |
           jpackage `
-            --name MCL `
-            --input target\ `
-            --main-jar MakanFinder-1.0-SNAPSHOT.jar `
+            --name MakanFinder `
+            --input target `
+            --main-jar MCL-5.0.jar `
             --main-class sample.Starter `
-            --type exe `
+            --type app-image `
             --icon installer\icon.ico `
-            --module-path javafx-sdk/javafx-sdk-21.0.1/lib `
-            --add-modules javafx.controls,javafx.fxml
-        shell: pwsh
+            --runtime-image runtime
 
-      - name: Upload installer artifact
+      - name: Zip app-image
+        run: Compress-Archive -Path "MakanFinder" -DestinationPath "MakanFinder-portable.zip"
+
+      - name: Upload portable zip
         uses: actions/upload-artifact@v4
         with:
-          name: MCL-${{ runner.os }}
-          path: |
-            *.dmg
-            *.exe
+          name: makanfinder-portable
+          path: MakanFinder-portable.zip
