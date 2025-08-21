@@ -48,9 +48,7 @@ jobs:
             --main-jar MakanFinder-1.0-SNAPSHOT.jar `
             --main-class sample.Starter `
             --type exe `
-            --icon installer\icon.ico `
-            --module-path $env:JAVA_HOME\jmods `
-            --add-modules javafx.controls,javafx.fxml
+            --icon installer\icon.ico
         shell: pwsh
 
       - name: Upload installer artifact
