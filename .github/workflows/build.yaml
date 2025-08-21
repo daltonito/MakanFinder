@@ -27,22 +27,27 @@ jobs:
       - name: Build JAR
         run: mvn clean package
 
-      - name: Create installer
+      # macOS installer
+      - name: Create DMG installer
+        if: runner.os == 'macOS'
         run: |
-          if [[ "${{ runner.os }}" == "macOS" ]]; then
-            jpackage \
-              --name MCL \
-              --input target/ \
-              --main-jar MakanFinder-1.0-SNAPSHOT.jar \
-              --type dmg \
-          elif [[ "${{ runner.os }}" == "Windows" ]]; then
-            jpackage \
-              --name MCL \
-              --input target/ \
-              --main-jar MakanFinder-1.0-SNAPSHOT.jar \
-              --type exe \
-              --icon src/main/resources/icon.ico
-          fi
+          jpackage \
+            --name MyApp \
+            --input target/ \
+            --main-jar myapp.jar \
+            --type dmg
+
+      # Windows installer
+      - name: Create EXE installer
+        if: runner.os == 'Windows'
+        run: |
+          jpackage `
+            --name MyApp `
+            --input target\ `
+            --main-jar myapp.jar `
+            --type exe `
+            --icon src\main\resources\icon.ico
+        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
