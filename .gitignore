@@ -1,0 +1,17 @@
+# Ignore compiled classes
+*.class
+
+# Ignore target directory
+target/
+
+# Ignore logs
+*.log
+
+# Ignore IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
