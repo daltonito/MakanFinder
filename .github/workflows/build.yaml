@@ -52,8 +52,11 @@ jobs:
       - name: Create runtime image (Java 21 + JavaFX)
         shell: pwsh
         run: |
-          $env:PATH="$env:JAVA_HOME/bin;$env:PATH"
-          jlink --module-path "$env:JAVA_HOME/jmods;javafx-sdk-21.0.2/lib" `
+          $javafxLib = Resolve-Path "javafx-sdk-21.0.2/lib"
+          echo "The javafxLib has value of $javafxLib"
+          echo "Module path has value $env:JAVA_HOME/jmods;$javafxLib"
+          
+          jlink --module-path "$env:JAVA_HOME/jmods;$javafxLib" `
                 --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics `
                 --output runtime
 
@@ -61,6 +64,12 @@ jobs:
             throw "Error: JRE was not created correctly. Missing java.exe."
           }
           Write-Host "Success: JRE found at runtime/bin/java.exe"
+
+      - name: Copy JavaFX DLLs to runtime
+        shell: pwsh
+        run: |
+          $javafxBin = Resolve-Path "javafx-sdk-21.0.2/bin"
+          Copy-Item -Path "$javafxBin\*.dll" -Destination "runtime/bin" -Recurse
 
       - name: Verify JavaFX DLLs in runtime
         shell: pwsh
