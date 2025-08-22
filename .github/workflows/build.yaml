@@ -29,7 +29,8 @@ jobs:
         run: |
           # Find the shaded JAR
           $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
-
+          echo "The JAR has value of $JAR"
+          
           # Check if the JAR file was found
           if ($null -eq $JAR) {
               throw "Error: The shaded JAR file was not found in the 'target' directory."
@@ -53,14 +54,31 @@ jobs:
         run: |
           $env:PATH="$env:JAVA_HOME/bin;$env:PATH"
           jlink --module-path "$env:JAVA_HOME/jmods;javafx-sdk-21.0.2/lib" `
-                --add-modules javafx.controls,javafx.fxml `
+                --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics `
                 --strip-debug --compress 2 --no-header-files --no-man-pages `
                 --output runtime
+
+        # A quick verification step to ensure the runtime was created
+          if (-not (Test-Path "runtime/bin/java.exe")) {
+          throw "Error: JRE was not created correctly. Missing java.exe."
+          }
+          Write-Host "Success: JRE found at runtime/bin/java.exe"
+
+      - name: Print build directory tree
+        shell: pwsh
+        run: |
+          # This command lists the contents of the current directory (recursively)
+          # to show the folder structure, including the 'runtime' directory.
+          Write-Host "--- Directory Tree ---"
+          Get-ChildItem -Recurse
+          Write-Host "----------------------"
 
       - name: Package Windows installer with Java 17
         shell: pwsh
         run: |
           $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
+          echo "The main-jar has value of $JAR"
+          echo "The name has value of $JAR.Name"
           $ICON_PATH = "installer/icon.ico"
           
           jpackage `
@@ -74,7 +92,8 @@ jobs:
             --win-shortcut `
             --runtime-image runtime `
             --dest target `
-            --icon "$ICON_PATH"
+            --icon "$ICON_PATH" `
+            --win-console
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
