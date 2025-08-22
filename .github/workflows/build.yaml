@@ -62,36 +62,16 @@ jobs:
           }
           Write-Host "Success: JRE found at runtime/bin/java.exe"
 
-      - name: Print build directory tree
+      # New step to run the application using the created runtime
+      - name: Run app using bundled JRE
         shell: pwsh
         run: |
-          Write-Host "--- Directory Tree ---"
-          Get-ChildItem -Recurse
-          Write-Host "----------------------"
-
-      - name: Package portable zip
-        shell: pwsh
-        run: |
+          # Find the fat JAR
           $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
-          $ICON_PATH = "installer/icon.ico"
-          
-          jpackage `
-            --name MCL `
-            --app-version 1.0.0 `
-            --input target `
-            --main-jar $JAR.Name `
-            --main-class sample.Starter `
-            --type zip `
-            --runtime-image runtime `
-            --dest target `
-            --icon "$ICON_PATH" `
-            --java-options "-Dprism.order=d3d,sw"
 
-      - name: Upload portable zip
-        uses: actions/upload-artifact@v4
-        with:
-          name: mcl-portable-zip
-          path: target/*.zip
+          # Run the application using the java.exe from the bundled runtime folder.
+          # We also add the prism option here to test the fix for the graphics error. -Dprism.order=d3d,sw
+          .\runtime\bin\java.exe -jar "$JAR.FullName"
 
       - name: Package Windows installer with Java 21
         shell: pwsh
@@ -113,8 +93,7 @@ jobs:
             --runtime-image runtime `
             --dest target `
             --icon "$ICON_PATH" `
-            --java-options "-Dprism.order=d3d,sw" `
-            --java-options "-Dprism.verbose=true" `
+            --java-options "-Dprism.order=d3d,j2d,sw" "-Dprism.verbose=true"
             --win-console
 
       - name: Upload installer
