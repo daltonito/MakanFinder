@@ -85,7 +85,7 @@ jobs:
             --runtime-image runtime `
             --dest target `
             --icon "$ICON_PATH" `
-            --java-options=-Dprism.order=d3d,sw
+            --java-options "-Dprism.order=d3d,sw"
 
       - name: Upload portable zip
         uses: actions/upload-artifact@v4
