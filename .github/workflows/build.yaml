@@ -36,11 +36,11 @@ jobs:
           }
 
           # Search for the main class and capture the output
-          $ClassExists = jar tf $JAR.FullName | Select-String "sample/Main.class"
+          $ClassExists = jar tf $JAR.FullName | Select-String "sample/Starter.class"
 
           # Explicitly throw an error if the class is not found
           if ($null -eq $ClassExists) {
-              throw "Error: The class 'sample.Main' was not found in the shaded JAR. Please check your pom.xml."
+              throw "Error: The class 'sample.Starter' was not found in the shaded JAR. Please check your pom.xml."
           }
 
       - name: Download JavaFX SDK
@@ -65,9 +65,9 @@ jobs:
           jpackage `
             --name MakanFinder `
             --app-version 1.0.0 `
-            --input . `
+            --input target `
             --main-jar $JAR.Name `
-            --main-class sample.Main `
+            --main-class sample.Starter `
             --type msi `
             --win-menu `
             --win-shortcut `
