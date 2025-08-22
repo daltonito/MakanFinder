@@ -21,11 +21,6 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      # This step is critical for building an MSI installer
-      - name: Install WiX Toolset
-        run: choco install wixtoolset --yes --version 3.14.1
-        shell: pwsh
-
       - name: Build fat JAR with Maven
         run: mvn -B clean package shade:shade -DskipTests
 
