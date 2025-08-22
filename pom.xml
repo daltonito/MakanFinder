@@ -36,30 +36,44 @@
 
     <build>
         <plugins>
-
-            <!-- Shade plugin: build fat JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
+                        <!-- The shade goal will run after the 'package' phase -->
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <!-- Write Main-Class -->
                             <transformers>
+                                <!-- This transformer adds the main class to the MANIFEST.MF file -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>sample.Starter</mainClass>
                                 </transformer>
+                                <!-- This transformer merges the javafx-specific module-info.class files
+                                     from all dependencies into a single file. This is crucial for JavaFX. -->
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
+                            <!-- This sets the name of the final shaded JAR -->
+                            <finalName>${project.artifactId}-shaded</finalName>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
 </project>
