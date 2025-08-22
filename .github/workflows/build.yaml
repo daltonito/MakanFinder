@@ -58,8 +58,7 @@ jobs:
                 --strip-debug --compress 2 --no-header-files --no-man-pages `
                 --output runtime
 
-        # A quick verification step to ensure the runtime was created
-          if (-not (Test-Path "runtime/bin/java.exe")) {
+          if (-Not (Test-Path "runtime/bin/java.exe")) {
             throw "Error: JRE was not created correctly. Missing java.exe."
           }
           Write-Host "Success: JRE found at runtime/bin/java.exe"
