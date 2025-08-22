@@ -24,6 +24,17 @@ jobs:
       - name: Build fat JAR with Maven
         run: mvn -B clean package shade:shade
 
+      - name: Verify shaded jar contains main class
+        shell: pwsh
+        run: |
+          $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
+          Write-Output "Checking $JAR for sample/Starter.class..."
+          $found = jar tf $JAR | Select-String "sample/Starter.class"
+          if (-not $found) {
+              Write-Error "ERROR: Main class missing in shaded JAR!"
+              exit 1
+          }
+
       - name: Create runtime image (Java + JavaFX)
         run: |
           curl -L https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_windows-x64_bin-sdk.zip -o javafx.zip
