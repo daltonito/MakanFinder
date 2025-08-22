@@ -22,26 +22,24 @@ jobs:
           java-version: 17
 
       - name: Build fat JAR with Maven
-        run: mvn -B clean package shade:shade
-
-      - name: List target
-        run: dir target
+        run: mvn -B clean package shade:shade -DskipTests
 
       - name: Verify shaded jar contains main class
         shell: pwsh
         run: |
           $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
-          Write-Output "Checking $JAR for sample/Starter.class..."
-          $found = jar tf $JAR | Select-String "sample/Starter.class"
-          if (-not $found) {
-              Write-Error "ERROR: Main class missing in shaded JAR!"
-              exit 1
-          }
+          Write-Output "Inspecting $JAR..."
+          jar tf $JAR | Select-String "sample/Starter.class"
+          if ($LASTEXITCODE -ne 0) { Write-Error "ERROR: Main class missing in shaded JAR!"; exit 1 }
 
-      - name: Create runtime image (Java + JavaFX)
+      - name: Download JavaFX SDK
         run: |
           curl -L https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_windows-x64_bin-sdk.zip -o javafx.zip
           tar -xf javafx.zip
+
+      - name: Create runtime image (Java + JavaFX)
+        shell: pwsh
+        run: |
           $env:PATH="$env:JAVA_HOME/bin;$env:PATH"
           jlink --module-path "$env:JAVA_HOME/jmods;javafx-sdk-21.0.2/lib" `
                 --add-modules javafx.controls,javafx.fxml `
@@ -49,16 +47,19 @@ jobs:
                 --output runtime
 
       - name: Package portable app-image
+        shell: pwsh
         run: |
+          $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
           jpackage `
             --name MakanFinder `
             --input target `
-            --main-jar MCL-5.0-shaded.jar `
+            --main-jar $JAR `
             --main-class sample.Starter `
             --type app-image `
             --runtime-image runtime
 
       - name: Zip app-image
+        shell: pwsh
         run: Compress-Archive -Path "MakanFinder" -DestinationPath "MakanFinder-portable.zip"
 
       - name: Upload portable zip

@@ -49,15 +49,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <!-- Include your project classes -->
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <includes>
-                                        <include>sample/**</include>
-                                    </includes>
-                                </filter>
-                            </filters>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <!-- Write Main-Class -->
                             <transformers>
