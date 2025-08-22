@@ -1,8 +1,6 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -103,9 +101,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        cloningLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
+        cloningLabel.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 15));
         authorLabel.setFont(Font.font("Arial", FontWeight.BOLD, 10));
-        cloningField.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
+        cloningField.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 15));
 
         initErrorNotFound();
         initErrorShortInput();
