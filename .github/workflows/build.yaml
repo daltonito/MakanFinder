@@ -90,7 +90,8 @@ jobs:
             --dest target `
             --icon "$ICON_PATH" `
             --java-options "-Dprism.order=d3d,sw" `
-            --java-options "-Dprism.verbose=true"
+            --java-options "-Dprism.verbose=true" `
+            --win-console
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
