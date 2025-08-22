@@ -24,6 +24,9 @@ jobs:
       - name: Build fat JAR with Maven
         run: mvn -B clean package shade:shade
 
+      - name: List target
+        run: dir target
+
       - name: Verify shaded jar contains main class
         shell: pwsh
         run: |
