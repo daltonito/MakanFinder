@@ -69,7 +69,31 @@ jobs:
           Get-ChildItem -Recurse
           Write-Host "----------------------"
 
-      - name: Package Windows installer with Java 17
+      - name: Package portable zip
+        shell: pwsh
+        run: |
+          $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
+          $ICON_PATH = "installer/icon.ico"
+          
+          jpackage `
+            --name MCL `
+            --app-version 1.0.0 `
+            --input target `
+            --main-jar $JAR.Name `
+            --main-class sample.Starter `
+            --type zip `
+            --runtime-image runtime `
+            --dest target `
+            --icon "$ICON_PATH" `
+            --java-options=-Dprism.order=d3d,sw
+
+      - name: Upload portable zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: mcl-portable-zip
+          path: target/*.zip
+
+      - name: Package Windows installer with Java 21
         shell: pwsh
         run: |
           $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
