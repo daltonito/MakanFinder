@@ -60,7 +60,7 @@ jobs:
 
         # A quick verification step to ensure the runtime was created
           if (-not (Test-Path "runtime/bin/java.exe")) {
-          throw "Error: JRE was not created correctly. Missing java.exe."
+            throw "Error: JRE was not created correctly. Missing java.exe."
           }
           Write-Host "Success: JRE found at runtime/bin/java.exe"
 
