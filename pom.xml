@@ -13,7 +13,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>sample.Starter</mainClass>
+        <mainClass>sample.Main</mainClass>
     </properties>
 
     <dependencies>
@@ -51,7 +51,7 @@
                             <transformers>
                                 <!-- This transformer adds the main class to the MANIFEST.MF file -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>sample.Starter</mainClass>
+                                    <mainClass>sample.Main</mainClass>
                                 </transformer>
                                 <!-- This transformer merges the javafx-specific module-info.class files
                                      from all dependencies into a single file. This is crucial for JavaFX. -->
