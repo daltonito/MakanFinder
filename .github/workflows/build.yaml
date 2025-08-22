@@ -90,7 +90,7 @@ jobs:
             --runtime-image runtime `
             --dest target `
             --icon "$ICON_PATH" `
-            --java-options=-Dprism.order=d3d,sw `
+            --java-options "-Dprism.order=d3d,sw" `
             --java-options "-Dprism.verbose=true"
 
       - name: Upload installer
