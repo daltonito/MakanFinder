@@ -71,7 +71,7 @@ jobs:
 
           # Run the application using the java.exe from the bundled runtime folder.
           # We also add the prism option here to test the fix for the graphics error. -Dprism.order=d3d,sw
-          .\runtime\bin\java.exe -jar "$JAR.FullName"
+          .\runtime\bin\java.exe -jar "$($JAR.FullName)"
 
       - name: Package Windows installer with Java 21
         shell: pwsh
