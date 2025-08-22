@@ -71,7 +71,8 @@ jobs:
             --type msi `
             --win-menu `
             --win-shortcut `
-            --runtime-image runtime
+            --runtime-image runtime `
+            --dest target
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
