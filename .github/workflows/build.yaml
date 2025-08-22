@@ -73,15 +73,15 @@ jobs:
         shell: pwsh
         run: |
           $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
-          echo "The main-jar has value of $JAR"
-          echo "The name has value of $JAR.Name"
+          echo "The main-jar has value of $($JAR.FullName)"
+          echo "The name has value of $($JAR.Name)"
           $ICON_PATH = "installer/icon.ico"
           
           jpackage `
             --name MCL `
             --app-version 1.0.0 `
             --input target `
-            --main-jar $JAR.Name `
+            --main-jar $($JAR.Name) `
             --main-class sample.Starter `
             --type msi `
             --win-menu `
