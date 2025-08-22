@@ -61,9 +61,10 @@ jobs:
         shell: pwsh
         run: |
           $JAR = Get-ChildItem target/*-shaded.jar | Select-Object -First 1
+          $ICON_PATH = "installer/icon.ico"
           
           jpackage `
-            --name MakanFinder `
+            --name MCL `
             --app-version 1.0.0 `
             --input target `
             --main-jar $JAR.Name `
@@ -72,10 +73,11 @@ jobs:
             --win-menu `
             --win-shortcut `
             --runtime-image runtime `
-            --dest target
+            --dest target `
+            --icon "$ICON_PATH"
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: makanfinder-installer
+          name: mcl-installer
           path: target/*.msi
