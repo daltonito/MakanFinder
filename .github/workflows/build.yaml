@@ -121,7 +121,7 @@ jobs:
             --runtime-image runtime `
             --dest target `
             --icon "$ICON_PATH" `
-            --java-options "-Dprism.order=d3d,j2d,sw" "-Dprism.verbose=true"
+            --java-options "-Dprism.order=d3d,j2d,sw" "-Dprism.verbose=true" `
             --win-console
 
       - name: Upload installer
