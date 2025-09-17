@@ -160,8 +160,12 @@ public class Main extends Application {
 
     private void setWindowIcon(Stage primaryStage) {
         try {
-            Image icon = new Image(getClass().getResourceAsStream("/images/icon.ico"));
-            primaryStage.getIcons().add(icon);
+            var iconUrl = getClass().getResource("/images/icon.ico");
+            if (iconUrl != null) {
+                primaryStage.getIcons().add(new Image(iconUrl.toExternalForm()));
+            } else {
+                System.out.println("Application icon not found at /images/icon.ico");
+            }
         } catch (Exception e) {
             System.out.println("Could not load icon: " + e.getMessage());
         }
