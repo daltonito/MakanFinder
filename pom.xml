@@ -7,7 +7,7 @@
 
     <groupId>sample</groupId>
     <artifactId>MCL</artifactId>
-    <version>7.0</version>
+    <version>7.1</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
